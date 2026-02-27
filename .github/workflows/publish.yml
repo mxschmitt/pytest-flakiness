@@ -1,8 +1,9 @@
 name: Publish to PyPI
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "v*"
 
 jobs:
   pypi-publish:
@@ -10,11 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: read
+      contents: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -27,3 +30,8 @@ jobs:
       - name: Publish to PyPI
         # uv automatically detects the OIDC token from the environment
         run: uv publish
+
+      - name: Create GitHub Release
+        run: gh release create "${{ github.ref_name }}" dist/* --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

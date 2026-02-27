@@ -1,6 +1,6 @@
 [project]
 name = "pytest-flakiness"
-version = "0.14.0"
+dynamic = ["version"]
 description = "Pytest reporter for Flakiness.io"
 readme = "README.md"
 authors = [
@@ -20,8 +20,14 @@ Repository = "https://github.com/flakiness/pytest-flakiness"
 Issues = "https://github.com/flakiness/pytest-flakiness/issues"
 
 [build-system]
-requires = ["uv_build>=0.9.16,<0.10.0"]
-build-backend = "uv_build"
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
+
+[tool.uv-dynamic-versioning]
+fallback-version = "0.0.0"
 
 [dependency-groups]
 dev = [

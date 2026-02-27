@@ -1,9 +1,8 @@
-name: Publish to PyPI
+name: Upload Python Package
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 
 jobs:
   pypi-publish:
@@ -11,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
-      contents: write
 
     steps:
       - name: Checkout code
@@ -28,10 +26,4 @@ jobs:
         run: uv build
 
       - name: Publish to PyPI
-        # uv automatically detects the OIDC token from the environment
         run: uv publish
-
-      - name: Create GitHub Release
-        run: gh release create "${{ github.ref_name }}" dist/* --generate-notes
-        env:
-          GH_TOKEN: ${{ github.token }}
